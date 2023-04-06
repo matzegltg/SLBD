@@ -1,69 +1,38 @@
 # Code for performing and visualizing knn
 
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
-from matplotlib import pyplot as plt
-from matplotlib.colors import ListedColormap
-from matplotlib.patches import Patch
-from sklearn.metrics import accuracy_score
 
-for key in [1,2,3,4]:
+def knn(X_train,y_train):
 
-    # load generated data
-    X = np.load(f"X_{key}.npy")
-    y = np.load(f"y_{key}.npy")
 
-    # split dataset into 80% training/validation data and 20% unseen test data
-    # select random state and shuffle data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
-                                                        random_state=42,
-                                                        shuffle=True)
+        clf = KNeighborsClassifier(metric="minkowski")
+        #create a dictionary of all values we want to test for n_neighbors
+        param_grid = {"n_neighbors": np.arange(2, 10)}
+        #use gridsearch to test all values for n_neighbors
+        knn_gscv = GridSearchCV(clf, param_grid, cv=5)
+        #fit model to data
+        knn_gscv.fit(X_train, y_train)
+        #check top performing n_neighbors value
+        k = knn_gscv.best_params_['n_neighbors']
+        print("best k-param selected:",k)
 
-    # create model
-    # two choieces for knn: metric, number of neighbours k
-    # basic assumptions: k=3, metrix minkowsky -> euclidian metric for p = 2
+        #Create the model
+        neigh = KNeighborsClassifier(n_neighbors=k, metric="minkowski")
 
-    # initialize the model
-    n_neighbours=3
-    neigh = KNeighborsClassifier(n_neighbors=n_neighbours, metric="minkowski")
+        # cross validation score
+        # train model and calculate cross validation score 
+        # number of folds: 10
+        # score is the accuracy
+        scores = cross_val_score(neigh, X_train, y_train, cv = 10)
+        mean = np.mean(scores)
+        print(f"mean score of training data with {k}-nn :", mean)
 
-    # cross validation score
-    # train model and calculate cross validation score 
-    # number of folds: 10
-    # score is the accuracy
-    scores = cross_val_score(neigh, X_train, y_train, cv = 10)
-    print(scores)
 
-    # train model
-    neigh.fit(X_train, y_train)
+        """
 
-    acc = accuracy_score(y_test, neigh.predict(X_test))
-    # create "test" meshgrid
-    x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, .1), np.arange(x2_min, x2_max, .1))
 
-    # predict class using "test" meshgrid
-    y = neigh.predict(np.c_[xx1.ravel(), xx2.ravel()])
-    y = y.reshape(xx1.shape)
-
-    # plot results of "test" meshgrid
-    plt.xlim(xx1.min(), xx1.max())
-    plt.ylim(xx2.min(), xx2.max())
-    plt.pcolormesh(xx1, xx2, y, cmap=ListedColormap(['#FFA4FF', '#C0C9FF']))
-
-    # scatter training data with corresponding classification
-    plt.scatter(X_train[:,0], X_train[:,1], c=y_train, cmap=ListedColormap(['#FF6A4C', '#526AFF']), alpha=0.4, marker="+", label="training")
-
-    # scatter test data with corresponding classification
-    plt.scatter(X_test[:,0], X_test[:,1], c=y_test, cmap=ListedColormap(['#AD001F', '#010086']), alpha=0.4, marker=".", label="testing")
-
-    # visualization of the legend
-    legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'),  Patch(color='#526AFF', label='Trainset class 1'), Patch(color='#AD001F', label='Testset class 0'),  Patch(color='#010086', label='Testset class 1')]
-    plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
-
-    plt.title(f"Tested accuracy: {np.round(acc, 2)}, \n cross val scores: {np.round(scores,2)}")
-    # store image
-    plt.savefig(f"knn_{key}")
+        """
+        return k,neigh,mean
