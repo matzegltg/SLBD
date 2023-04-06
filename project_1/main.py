@@ -1,4 +1,5 @@
 import numpy as np
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
@@ -6,7 +7,8 @@ from sklearn.linear_model import LogisticRegression
 from matplotlib import pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import Patch
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from knn import knn
 from LR import lr 
 from QDA import qda 
@@ -145,3 +147,58 @@ for key in [1,2,3,4]:
         # store image
         plt.savefig(f"figures/lr/LR_{key}new")
         
+
+    #fit models
+    model_knn.fit(X_train,y_train)
+    model_qda.fit(X_train,y_train)
+    model_lr.fit(X_train,y_train)
+    
+    #predict
+    y_pred_knn = model_knn.predict(X_test)
+    y_pred_qda = model_qda.predict(X_test)
+    y_pred_lr = model_lr.predict(X_test)
+
+    # calculate confusion matrix for each model
+    cm_knn = confusion_matrix(y_test, y_pred_knn)
+    cm_qda = confusion_matrix(y_test, y_pred_qda)
+    cm_lr = confusion_matrix(y_test, y_pred_lr)
+    
+    # calculate accuracy
+    acc_knn = accuracy_score(y_test, y_pred_knn)
+    acc_qda = accuracy_score(y_test, y_pred_qda)
+    acc_lr = accuracy_score(y_test, y_pred_lr)
+
+    # calculate precision
+    precision_knn = precision_score(y_test, y_pred_knn)
+    precision_qda = precision_score(y_test, y_pred_qda)
+    precision_lr = precision_score(y_test, y_pred_lr)
+
+    # calculate recall
+    recall_knn = recall_score(y_test, y_pred_knn)
+    recall_qda = recall_score(y_test, y_pred_qda)
+    recall_lr = recall_score(y_test, y_pred_lr)
+
+    # calculate F1-score
+    f1_knn = f1_score(y_test, y_pred_knn)
+    f1_qda = f1_score(y_test, y_pred_qda)
+    f1_lr = f1_score(y_test, y_pred_lr)
+
+    # print the results
+    print("Accuracy: KNN:", acc_knn, "QDA: ", acc_qda, "LR: ", acc_lr)
+    print("Precision: KNN:", precision_knn, "QDA: ", precision_qda, "LR: ", precision_lr)
+    print("Recall: KNN:", recall_knn, "QDA: ", recall_qda, "LR: ", recall_lr)
+    print("F1-score: KNN:", f1_knn, "QDA: ", f1_qda, "LR: ", f1_lr)
+    print("\n")
+    # plot confusion matrices
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+    
+    sns.heatmap(cm_knn, annot=True, fmt='g', ax=axes[0])
+    sns.heatmap(cm_qda, annot=True, fmt='g', ax=axes[1])
+    sns.heatmap(cm_lr, annot=True, fmt='g', ax=axes[2])
+    
+    axes[0].set_title('KNN')
+    axes[1].set_title('QDA')
+    axes[2].set_title('Logistic Regression')
+    
+    plt.tight_layout()
+    plt.show()
