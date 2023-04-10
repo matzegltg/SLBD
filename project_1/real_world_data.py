@@ -28,11 +28,20 @@ removed_instances = {
     4: df.shape[0] - 1000
 }
 
+
 for key, remove_n in removed_instances.items():
-    drop_indices = np.random.choice(df.index, remove_n, replace=False)
-    df_subset = df.drop(drop_indices)
-    sns.pairplot(df_subset, hue='type')
-    plt.savefig(f"data_{key}")
+    df_subset = df.drop(np.random.choice(df.index, remove_n, replace=False))
+    # Normalization not really needed?!
+    #ys = df_subset['type']
+    #X_normalized = df_subset.drop(['type'], axis=1)
+    #X_normalized = (X_normalized-X_normalized.mean())/X_normalized.std()
+    #df_subset_final = pd.concat([X_normalized, ys], axis=1)
+    
+    # Visualize dataset
+    sns.pairplot(df_subset, hue='type', kind='scatter', corner=True, plot_kws={'alpha': 0.5})
+    plt.savefig(f"data_rw_{key}")
+    
+    # seperate y data and transform y entries to 0 and 1
     y = df_subset['type']
     y_num = []
     for row in y:
@@ -40,11 +49,10 @@ for key, remove_n in removed_instances.items():
             y_num.append(1)
         else:
             y_num.append(0)
-
+    
+    # Transform y and X to np arrays
     y = np.array(y_num)
     X = df_subset.drop(['type'], axis=1).to_numpy()
 
     np.save(f"X_rw_{key}", X)
     np.save(f"y_rw_{key}", y)
-    
-

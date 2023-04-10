@@ -14,12 +14,19 @@ from knn import knn
 from LR import lr 
 from QDA import qda 
 
+# If true: Evaluate models with simulated data, else: real world data
+real_data = True
 
 #load data
 for key in [1,2,3,4]:
+    
     # load generated data
-    X = np.load(f"X_{key}.npy")
-    y = np.load(f"y_{key}.npy")
+    if real_data:
+        X = np.load(f"X_rw_{key}.npy")
+        y = np.load(f"y_rw_{key}.npy")
+    else:
+        X = np.load(f"X_{key}.npy")
+        y = np.load(f"y_{key}.npy")
 
     # split dataset into 80% training/validation data and 20% unseen test data
     # select random state and shuffle data
@@ -94,38 +101,41 @@ for key in [1,2,3,4]:
         acc = acc_lr
         method = "Logistic  Regression"
 
-    #Plotting the result
-    # create "test" meshgrid
-    x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, .1), np.arange(x2_min, x2_max, .1))
+    if real_data:
+        pass
+    else:
+        #Plotting the result
+        # create "test" meshgrid
+        x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+        x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+        xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, .1), np.arange(x2_min, x2_max, .1))
 
-    # predict class using "test" meshgrid
-    y = model_knn.predict(np.c_[xx1.ravel(), xx2.ravel()])
-    y = y.reshape(xx1.shape)
+        # predict class using "test" meshgrid
+        y = model_knn.predict(np.c_[xx1.ravel(), xx2.ravel()])
+        y = y.reshape(xx1.shape)
 
-    # plot results of "test" meshgrid
-    fig1 = plt.figure("Figure 1")
-    plt.xlim(xx1.min(), xx1.max())
-    plt.ylim(xx2.min(), xx2.max())
-    plt.pcolormesh(xx1, xx2, y, cmap=ListedColormap(['#FFA4FF', '#C0C9FF']))
+        # plot results of "test" meshgrid
+        fig1 = plt.figure("Figure 1")
+        plt.xlim(xx1.min(), xx1.max())
+        plt.ylim(xx2.min(), xx2.max())
+        plt.pcolormesh(xx1, xx2, y, cmap=ListedColormap(['#FFA4FF', '#C0C9FF']))
 
-    # scatter training data with corresponding classification
-    plt.scatter(X_train[:,0], X_train[:,1], c=y_train, cmap=ListedColormap(['#FF6A4C', '#526AFF']), alpha=0.4, marker="+", label="training")
+        # scatter training data with corresponding classification
+        plt.scatter(X_train[:,0], X_train[:,1], c=y_train, cmap=ListedColormap(['#FF6A4C', '#526AFF']), alpha=0.4, marker="+", label="training")
 
-    # scatter test data with corresponding classification
-    plt.scatter(X_test[:,0], X_test[:,1], c=y_test, cmap=ListedColormap(['#AD001F', '#010086']), alpha=0.4, marker=".", label="testing")
+        # scatter test data with corresponding classification
+        plt.scatter(X_test[:,0], X_test[:,1], c=y_test, cmap=ListedColormap(['#AD001F', '#010086']), alpha=0.4, marker=".", label="testing")
 
-    # visualization of the legend
-    legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
-    plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
+        # visualization of the legend
+        legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
+        plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
 
-    plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
-    # store image
-    plt.savefig(f"figures/{method}_dataset{key}")
+        plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
+        # store image
+        plt.savefig(f"figures/{method}_dataset{key}")
+            
+
         
-
-    
 
     # calculate precision
     precision_knn = precision_score(y_test, y_pred_knn)
@@ -149,7 +159,7 @@ for key in [1,2,3,4]:
     print("F1-score: KNN:", f1_knn, "QDA: ", f1_qda, "LR: ", f1_lr)
     print("\n")
 
-    
+        
     # plot confusion matrices
     fig, axes = plt.subplots(1, 3, figsize=(12, 4))
     
@@ -162,5 +172,9 @@ for key in [1,2,3,4]:
     axes[2].set_title('Logistic Regression')
     
     plt.tight_layout()
-    plt.savefig(f"figures/confusion_mat/matrix{key}")
+    if real_data:
+        plt.savefig(f"figures/confusion_mat/matrix_rw_{key}")
+    else:
+        plt.savefig(f"figures/confusion_mat/matrix{key}")
     fig.canvas.flush_events()
+        
