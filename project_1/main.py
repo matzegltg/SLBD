@@ -33,21 +33,21 @@ for key in [1,2,3,4]:
     model_lr, mean_lr = lr(X_train,y_train)
 
     #Case of a tie between two models
-    if mean_knn == max(mean_knn, mean_qda,mean_lr) and abs(mean_knn-mean_qda) < 0.001:
+    if (mean_knn == max(mean_knn, mean_qda,mean_lr) or mean_qda == max(mean_knn, mean_qda,mean_lr))and abs(mean_knn-mean_qda) < 0.001:
         print("Tie (KNN/QDA)--- Cross validation with 5 folds")
         scores = cross_val_score(model_knn, X_train, y_train, cv = 5)
         mean_knn = np.mean(scores)
         scores = cross_val_score(model_qda, X_train, y_train, cv = 5)
         mean_qda = np.mean(scores)
 
-    if mean_knn == max(mean_knn, mean_qda,mean_lr) and abs(mean_knn-mean_lr) < 0.001:
+    if (mean_knn == max(mean_knn, mean_qda,mean_lr) or mean_lr == max(mean_knn, mean_qda,mean_lr)) and abs(mean_knn-mean_lr) < 0.001:
         print("Tie (KNN/LR)--- Cross validation with 5 folds")
         scores = cross_val_score(model_knn, X_train, y_train, cv = 5)
         mean_knn = np.mean(scores)
         scores = cross_val_score(model_lr, X_train, y_train, cv = 5)
         mean_lr = np.mean(scores)
 
-    if mean_qda == max(mean_knn, mean_qda,mean_lr) and abs(mean_qda-mean_lr) < 0.001:
+    if( mean_qda == max(mean_knn, mean_qda,mean_lr) or mean_lr == max(mean_knn, mean_qda,mean_lr)) and abs(mean_qda-mean_lr) < 0.001:
         print("Tie (LR/QDA)--- Cross validation with 5 folds")
         scores = cross_val_score(model_qda, X_train, y_train, cv = 5)
         mean_qda = np.mean(scores)
