@@ -31,15 +31,31 @@ for key in [1,2,3,4]:
     model_qda, mean_qda = qda(X,y)
     model_lr, mean_lr = lr(X,y)
 
+    #fit models
+    model_knn.fit(X_train,y_train)
+    model_qda.fit(X_train,y_train)
+    model_lr.fit(X_train,y_train)
+    
+    #predict
+    y_pred_knn = model_knn.predict(X_test)
+    y_pred_qda = model_qda.predict(X_test)
+    y_pred_lr = model_lr.predict(X_test)
+
+    # calculate confusion matrix for each model
+    cm_knn = confusion_matrix(y_test, y_pred_knn)
+    cm_qda = confusion_matrix(y_test, y_pred_qda)
+    cm_lr = confusion_matrix(y_test, y_pred_lr)
+    
+    # calculate accuracy
+    acc_knn = accuracy_score(y_test, y_pred_knn)
+    acc_qda = accuracy_score(y_test, y_pred_qda)
+    acc_lr = accuracy_score(y_test, y_pred_lr)
+
     # if knn has the best accuracy
     if mean_knn == max(mean_knn, mean_qda,mean_lr):
         print(f"Best prediction model for dataset{key} is {k}-NN")
-
-        #fit the model
-        model_knn.fit(X_train,y_train)
-
-        #predictions on training set
-        acc = accuracy_score(y_test, model_knn.predict(X_test))
+        model = model_knn
+        
 
         # create "test" meshgrid
         x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -73,12 +89,7 @@ for key in [1,2,3,4]:
     # if qda has the best accuracy
     if mean_qda == max(mean_knn, mean_qda,mean_lr):
         print(f"Best prediction model for dataset{key} is QDA")
-
-        #fit the model
-        model_qda.fit(X_train,y_train)
-
-        #predictions
-        acc = accuracy_score(y_test, model_qda.predict(X_test))
+        model = model_qda
 
         # create "test" meshgrid
         x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -112,12 +123,7 @@ for key in [1,2,3,4]:
     # if lr has the best accuracy
     if mean_lr == max(mean_knn, mean_qda,mean_lr):
         print(f"Best prediction model for dataset{key} is Logistic Regression")
-
-        #fit the model
-        model_lr.fit(X_train,y_train)
-
-        #predictions
-        acc = accuracy_score(y_test, model_lr.predict(X_test))
+        model = model_knn
 
         # create "test" meshgrid
         x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
@@ -148,25 +154,7 @@ for key in [1,2,3,4]:
         plt.savefig(f"figures/lr/LR_{key}new")
         
 
-    #fit models
-    model_knn.fit(X_train,y_train)
-    model_qda.fit(X_train,y_train)
-    model_lr.fit(X_train,y_train)
     
-    #predict
-    y_pred_knn = model_knn.predict(X_test)
-    y_pred_qda = model_qda.predict(X_test)
-    y_pred_lr = model_lr.predict(X_test)
-
-    # calculate confusion matrix for each model
-    cm_knn = confusion_matrix(y_test, y_pred_knn)
-    cm_qda = confusion_matrix(y_test, y_pred_qda)
-    cm_lr = confusion_matrix(y_test, y_pred_lr)
-    
-    # calculate accuracy
-    acc_knn = accuracy_score(y_test, y_pred_knn)
-    acc_qda = accuracy_score(y_test, y_pred_qda)
-    acc_lr = accuracy_score(y_test, y_pred_lr)
 
     # calculate precision
     precision_knn = precision_score(y_test, y_pred_knn)
