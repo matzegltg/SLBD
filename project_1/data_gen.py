@@ -21,7 +21,7 @@ meta_data = {
 }
 
 # Logistic regression: [1000, [[0,0], [2,2]], [[[1, 0.5], [0.5, 1]], [[1, -0.5], [-0.5, 1]]]]
-# QDA: [1000, [[0,0], [2,2]], [[[1, 0.5], [0.5, 1]], [[1, 0], [0, 1.5]]]]
+# QDA: [1000, [[0,0], [2,2]], [[[1, 0.5], [0.5, 1]], [[1, 0], [0, 1]]]]
 # KNN: [1000, [[0,0], [2,2]], [[[1, 0.5], [0.5, 1]], [[1, -0.5], [-0.5, 1]]]]
 
 
@@ -43,7 +43,7 @@ means = np.array(data_distrib_info[1])
 covs = np.array(data_distrib_info[2])
 
 # Generate the data for each class
-np.random.seed(42)
+np.random.seed(4)
 # class 0
 X0 = np.random.multivariate_normal(means[0], covs[0], n_samples)
 y0 = np.zeros(n_samples)
