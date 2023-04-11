@@ -89,13 +89,13 @@ for key in [1,2,3,4]:
         method = str(k)+"-NN"
 
     # if qda has the best accuracy
-    if mean_qda == max(mean_knn, mean_qda,mean_lr):
+    elif mean_qda == max(mean_knn, mean_qda,mean_lr):
         print(f"Best prediction model for dataset{key} is QDA")
         model = model_qda
         acc = acc_qda
         method = "QDA"
     # if lr has the best accuracy
-    if mean_lr == max(mean_knn, mean_qda,mean_lr):
+    elif mean_lr == max(mean_knn, mean_qda,mean_lr):
         print(f"Best prediction model for dataset{key} is Logistic Regression")
         model = model_knn
         acc = acc_lr

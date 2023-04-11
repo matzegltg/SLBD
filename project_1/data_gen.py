@@ -27,7 +27,7 @@ meta_data = {
 
 # select key and values
 # TODO: Change key here (1,2,3,4)
-key = 4
+key = 1
 data_distrib_info = meta_data[key]
 
 # Set the number of samples per class (Assumption: balanced data sets)
@@ -43,6 +43,7 @@ means = np.array(data_distrib_info[1])
 covs = np.array(data_distrib_info[2])
 
 # Generate the data for each class
+np.random.seed(42)
 # class 0
 X0 = np.random.multivariate_normal(means[0], covs[0], n_samples)
 y0 = np.zeros(n_samples)
