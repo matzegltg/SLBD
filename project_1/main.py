@@ -111,7 +111,7 @@ for key in [1,2,3,4]:
         xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, .1), np.arange(x2_min, x2_max, .1))
 
         # predict class using "test" meshgrid
-        y = model_knn.predict(np.c_[xx1.ravel(), xx2.ravel()])
+        y = model.predict(np.c_[xx1.ravel(), xx2.ravel()])
         y = y.reshape(xx1.shape)
 
         # plot results of "test" meshgrid
