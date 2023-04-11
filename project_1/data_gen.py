@@ -27,7 +27,7 @@ meta_data = {
 
 # select key and values
 # TODO: Change key here (1,2,3,4)
-key = 1
+key = 4
 data_distrib_info = meta_data[key]
 
 # Set the number of samples per class (Assumption: balanced data sets)

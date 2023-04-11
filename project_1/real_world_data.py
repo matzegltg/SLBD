@@ -32,17 +32,16 @@ removed_instances = {
 for key, remove_n in removed_instances.items():
     df_subset = df.drop(np.random.choice(df.index, remove_n, replace=False))
     # Normalization not really needed?!
-    #ys = df_subset['type']
-    #X_normalized = df_subset.drop(['type'], axis=1)
-    #X_normalized = (X_normalized-X_normalized.mean())/X_normalized.std()
-    #df_subset_final = pd.concat([X_normalized, ys], axis=1)
+    y = df_subset['type']
+    X_normalized = df_subset.drop(['type'], axis=1)
+    X_normalized = (X_normalized-X_normalized.mean())/X_normalized.std()
+    df_subset_final = pd.concat([X_normalized, y], axis=1)
     
     # Visualize dataset
-    sns.pairplot(df_subset, hue='type', kind='scatter', corner=True, plot_kws={'alpha': 0.5})
-    plt.savefig(f"figures/avocados_data/data_rw_{key}")
+    sns.pairplot(df_subset_final, hue='type', kind='scatter', corner=True, plot_kws={'alpha': 0.5})
+    plt.savefig(f"figures/avocados_data/data_rw_{key}", dpi=400)
     
     # seperate y data and transform y entries to 0 and 1
-    y = df_subset['type']
     y_num = []
     for row in y:
         if row == "organic":
