@@ -13,6 +13,8 @@ df = pd.read_csv('figures/avocados_data/avocado.csv', sep=",")
 df = df.drop(['region', 'year','XLarge Bags', 'Large Bags', 'Small Bags', 'Total Bags', 'Date', 'Unnamed: 0'], axis=1)
 
 # shuffle data set
+np.random.seed(4)
+
 df = df.sample(frac=1)
 
 # 1,2,3,4 different sizes of datasets
