@@ -39,7 +39,7 @@ for key, remove_n in removed_instances.items():
     
     # Visualize dataset
     sns.pairplot(df_subset, hue='type', kind='scatter', corner=True, plot_kws={'alpha': 0.5})
-    plt.savefig(f"data_rw_{key}")
+    plt.savefig(f"figures/avocados_data/data_rw_{key}")
     
     # seperate y data and transform y entries to 0 and 1
     y = df_subset['type']

@@ -15,7 +15,7 @@ from LR import lr
 from QDA import qda 
 
 # If true: Evaluate models with simulated data, else: real world data
-real_data = True
+real_data = False
 
 #load data
 for key in [1,2,3,4]:
