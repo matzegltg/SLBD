@@ -113,7 +113,8 @@ for key in [1,2,3,4]:
 
         # scatter test data with corresponding classification
         plt.scatter(X_test[:,0], X_test[:,1], c=y_test, cmap=ListedColormap(['#AD001F', '#010086']), alpha=0.4, marker=".", label="testing")
-
+        legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
+        plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
         for i in range(4):
             data_eval_train = data_train[i*int(data_train.shape[0]/4):int(data_train.shape[0]/4)*(i+1),:]
             
@@ -131,8 +132,7 @@ for key in [1,2,3,4]:
                 # Plot
                 x = np.linspace(x1_min, x1_max, 100)
                 y = m * x + c
-                plt.plot(x, y, label=i)
-                plt.legend()
+                plt.plot(x, y)
                 plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
                 plt.savefig(f"figures/bias_variance/{method}_dataset{key}")
             elif method == f"{str(k)}-NN":
@@ -149,10 +149,6 @@ for key in [1,2,3,4]:
                 # plot results of "test" meshgrid
                 plt.contour(xx1, xx2, y, [0.0], linewidths=1, label=i)
 
-                # visualization of the legend
-                legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
-                #plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
-                plt.legend()
                 plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
                 # store image
                 plt.savefig(f"figures/bias_variance/{method}_dataset{key}")
@@ -170,10 +166,6 @@ for key in [1,2,3,4]:
                 # plot results of "test" meshgrid
                 plt.contour(xx1, xx2, y, [0.0], linewidths=1, label=i)
 
-                # visualization of the legend
-                legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
-                #plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
-                plt.legend()
                 plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
                 # store image
                 plt.savefig(f"figures/bias_variance/{method}_dataset{key}")
