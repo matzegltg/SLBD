@@ -101,7 +101,7 @@ for key in [1,2,3,4]:
         acc = acc_lr
         method = "Logistic Regression"
 
-    if key == 3 or key == 4:
+    if (key == 2 or key == 3 or key == 4) and real_data == False:
         data_train = np.concatenate((X_train, y_train.reshape(-1, 1)), axis=1)
         fig2 = plt.figure("Figure 2")
         x1_min, x1_max = X_train[:, 0].min() - 1, X_train[:, 0].max() + 1
@@ -119,8 +119,6 @@ for key in [1,2,3,4]:
             
             data_eval_X = data_eval_train[:,:-1]
             data_eval_y = data_eval_train[:,-1]
-            print(method)
-            print("-----------------------------")
             if method == "Logistic Regression":
                 clf = LogisticRegression()
                 clf.fit(data_eval_X, data_eval_y)
@@ -135,7 +133,8 @@ for key in [1,2,3,4]:
                 y = m * x + c
                 plt.plot(x, y, label=i)
                 plt.legend()
-                plt.savefig("Logreg")
+                plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
+                plt.savefig(f"figures/bias_variance/{method}_dataset{key}")
             elif method == f"{str(k)}-NN":
                 #Plotting the result
                 # create "test" meshgrid
@@ -156,7 +155,7 @@ for key in [1,2,3,4]:
                 plt.legend()
                 plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
                 # store image
-                plt.savefig(f"{method}_dataset{key}")
+                plt.savefig(f"figures/bias_variance/{method}_dataset{key}")
 
             elif method == "QDA":
                 print("qda-if")
@@ -177,42 +176,42 @@ for key in [1,2,3,4]:
                 plt.legend()
                 plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
                 # store image
-                plt.savefig(f"{method}_dataset{key}new")
-        #plt.show()
+                plt.savefig(f"figures/bias_variance/{method}_dataset{key}")
+        plt.show()
     if real_data:
         pass
-    #else:
-    #    #Plotting the result
-    #    # create "test" meshgrid
-    #    x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    #    x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    #    xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, .1), np.arange(x2_min, x2_max, .1))
-#
-    #    # predict class using "test" meshgrid
-    #    y = model.predict(np.c_[xx1.ravel(), xx2.ravel()])
-    #    y = y.reshape(xx1.shape)
-#
-    #    # plot results of "test" meshgrid
-    #    fig1 = plt.figure("Figure 1")
-    #    plt.xlim(xx1.min(), xx1.max())
-    #    plt.ylim(xx2.min(), xx2.max())
-    #    plt.pcolormesh(xx1, xx2, y, cmap=ListedColormap(['#FFA4FF', '#C0C9FF']))
-#
-    #    # scatter training data with corresponding classification
-    #    plt.scatter(X_train[:,0], X_train[:,1], c=y_train, cmap=ListedColormap(['#FF6A4C', '#526AFF']), alpha=0.4, marker="+", label="training")
-#
-    #    # scatter test data with corresponding classification
-    #    plt.scatter(X_test[:,0], X_test[:,1], c=y_test, cmap=ListedColormap(['#AD001F', '#010086']), alpha=0.4, marker=".", label="testing")
-#
-    #    # visualization of the legend
-    #    legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
-    #    plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
-#
-    #    plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
-    #    # store image
-    #    plt.savefig(f"figures/{method}_dataset{key}")
-    #        
-#
+    else:
+        #Plotting the result
+        # create "test" meshgrid
+        x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+        x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+        xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, .1), np.arange(x2_min, x2_max, .1))
+
+        # predict class using "test" meshgrid
+        y = model.predict(np.c_[xx1.ravel(), xx2.ravel()])
+        y = y.reshape(xx1.shape)
+
+        # plot results of "test" meshgrid
+        fig1 = plt.figure("Figure 1")
+        plt.xlim(xx1.min(), xx1.max())
+        plt.ylim(xx2.min(), xx2.max())
+        plt.pcolormesh(xx1, xx2, y, cmap=ListedColormap(['#FFA4FF', '#C0C9FF']))
+
+        # scatter training data with corresponding classification
+        plt.scatter(X_train[:,0], X_train[:,1], c=y_train, cmap=ListedColormap(['#FF6A4C', '#526AFF']), alpha=0.4, marker="+", label="training")
+
+        # scatter test data with corresponding classification
+        plt.scatter(X_test[:,0], X_test[:,1], c=y_test, cmap=ListedColormap(['#AD001F', '#010086']), alpha=0.4, marker=".", label="testing")
+
+        # visualization of the legend
+        legend_handles = [Patch(color='#FF6A4C', label='Trainset class 0'), Patch(color='#AD001F', label='Testset class 0'), Patch(color='#526AFF', label='Trainset class 1'),   Patch(color='#010086', label='Testset class 1')]
+        plt.legend(handles=legend_handles, ncol=4, bbox_to_anchor=[0.5, 0], loc='lower center', fontsize=8, handlelength=.8)
+
+        plt.title(f"{method}\n Tested accuracy: {np.round(acc, 2)}")
+        # store image
+        plt.savefig(f"figures/{method}_dataset{key}")
+            
+
         
 
     # calculate precision
